@@ -13,7 +13,7 @@ use Illuminate\Queue\SerializesModels;
 class SalvarClienteNoBancoJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
+    private $clientes;
     /**
      * Create a new job instance.
      *
@@ -34,47 +34,49 @@ class SalvarClienteNoBancoJob implements ShouldQueue
     {
         $clientes_com_erro = array();
         unset($this->clientes[0]);
+        // dd($this->clientes);
 
         foreach ($this->clientes as $cliente) {
             try {
-                if (Clientes::find($cliente['cliente']['id'])) {
-                    $listarClientes = Clientes::findOrFail($cliente['cliente']['id'])->first();
+                if (Clientes::find($cliente['contato']['id'])) {
+                    $listarClientes = Clientes::findOrFail($cliente['contato']['id'])->first();
                 } else {
                     $listarClientes = new Clientes();
-                    $listarClientes->id = $cliente['cliente']['id'];
+                    $listarClientes->id = $cliente['contato']['id'];
                 }
 
-                $listarClientes->codigo = $cliente['cliente']['codigo'];
-                $listarClientes->nome = $cliente['cliente']['nome'];
-                $listarClientes->fantasia = $cliente['cliente']['fantasia'];
-                $listarClientes->tipo = $cliente['cliente']['tipo'];
-                $listarClientes->cnpj = $cliente['cliente']['cnpj'];
-                $listarClientes->ie_rg = $cliente['cliente']['ie_rg'];
-                $listarClientes->endereco = $cliente['cliente']['endereco'];
-                $listarClientes->numero = $cliente['cliente']['numero'];
-                $listarClientes->bairro = $cliente['cliente']['bairro'];
-                $listarClientes->cep = $cliente['cliente']['cep'];
-                $listarClientes->cidade = $cliente['cliente']['cidade'];
-                $listarClientes->complemento = $cliente['cliente']['complemento'];
-                $listarClientes->uf = $cliente['cliente']['uf'];
-                $listarClientes->fone = $cliente['cliente']['fone'];
-                $listarClientes->email = $cliente['cliente']['email'];
-                $listarClientes->situacao = $cliente['cliente']['situacao'];
-                $listarClientes->contribuinte = $cliente['cliente']['contribuinte'];
-                $listarClientes->site = $cliente['cliente']['site'];
-                $listarClientes->celular = $cliente['cliente']['celular'];
-                $listarClientes->dataAlteracao = $cliente['cliente']['dataAlteracao'];
-                $listarClientes->dataInclusao = $cliente['cliente']['dataInclusao'];
-                $listarClientes->sexo = $cliente['cliente']['sexo'];
-                $listarClientes->clienteDesde = $cliente['cliente']['clienteDesde'];
-                $listarClientes->limiteCredito = intval($cliente['cliente']['limiteCredito']);
+                $listarClientes->codigo = $cliente['contato']['codigo'];
+                $listarClientes->nome = $cliente['contato']['nome'];
+                $listarClientes->fantasia = $cliente['contato']['fantasia'];
+                $listarClientes->tipo = $cliente['contato']['tipo'];
+                $listarClientes->cnpj = $cliente['contato']['cnpj'];
+                $listarClientes->ie_rg = $cliente['contato']['ie_rg'];
+                $listarClientes->endereco = $cliente['contato']['endereco'];
+                $listarClientes->numero = $cliente['contato']['numero'];
+                $listarClientes->bairro = $cliente['contato']['bairro'];
+                $listarClientes->cep = $cliente['contato']['cep'];
+                $listarClientes->cidade = $cliente['contato']['cidade'];
+                $listarClientes->complemento = $cliente['contato']['complemento'];
+                $listarClientes->uf = $cliente['contato']['uf'];
+                $listarClientes->fone = $cliente['contato']['fone'];
+                $listarClientes->email = $cliente['contato']['email'];
+                $listarClientes->situacao = $cliente['contato']['situacao'];
+                $listarClientes->contribuinte = $cliente['contato']['contribuinte'];
+                $listarClientes->site = $cliente['contato']['site'];
+                $listarClientes->celular = $cliente['contato']['celular'];
+                $listarClientes->dataAlteracao = $cliente['contato']['dataAlteracao'];
+                $listarClientes->dataInclusao = $cliente['contato']['dataInclusao'];
+                $listarClientes->sexo = $cliente['contato']['sexo'];
+                $listarClientes->clienteDesde = $cliente['contato']['clienteDesde'];
+                $listarClientes->limiteCredito = intval($cliente['contato']['limiteCredito']);
 
                 if ($listarClientes->save()) {
                 } else {
                     print_r("erro, ");
                 }
             } catch (\Throwable $th) {
-                array_push($clientes_com_erro, $cliente['cliente']['id']);
+                dd($th);
+                array_push($clientes_com_erro, $cliente['contato']['id']);
             }
 
             /* Feature: Enviar por email clientes que estão com problema de preenchimento */
